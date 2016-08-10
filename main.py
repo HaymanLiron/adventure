@@ -1,6 +1,16 @@
-from bottle import route, run, template, static_file, request
+from bottle import route, run, template, static_file, get, post, request
 import random
 import json
+import pymysql
+
+
+# Connect to the database
+connection = pymysql.connect(host='localhost',
+                             user='root',
+                             password='',
+                             db='adventure-final',
+                             charset='utf8',
+                             cursorclass=pymysql.cursors.DictCursor)
 
 
 @route("/", method="GET")
@@ -11,25 +21,27 @@ def index():
 @route("/start", method="POST")
 def start():
     username = request.POST.get("name")
+    password = request.POST.get("password")
+    gender = request.POST.get("gender")
     current_adv_id = request.POST.get("adventure_id")
 
+    # TODO: before adding user
 
-    user_id = 0 #todo check if exists and if not create it
-    current_story_id = 0 #todo change
-    next_steps_results = [
-        {"id": 1, "option_text": "I fight it"},
-        {"id": 2, "option_text": "I give him 10 coins"},
-        {"id": 3, "option_text": "I tell it that I just want to go home"},
-        {"id": 4, "option_text": "I run away quickly"}
-        ]
+    try:
+        with connection.cursor() as cursor:
 
-    #todo add the next step based on db
-    return json.dumps({"user": user_id,
-                       "adventure": current_adv_id,
-                       "current": current_story_id,
-                       "text": "You meet a mysterious creature in the woods, what do you do?",
-                       "image": "troll.png",
-                       "options": next_steps_results
+            sql = "INSERT INTO `adventure-final`.`users` (`idusers`, `user_name`, `password`, `curr_question`, `user_coins`, `user_life`, `gender`) " \
+                  "VALUES (NULL, username, password, '1', '100', '100', gender);"
+
+            cursor.execute(sql)
+            connection.commit()
+            print("user added!")
+    except Exception as e:
+        print("you failed")
+
+
+    return json.dumps({"user": username,
+                       "adventure": current_adv_id
                        })
 
 
@@ -54,6 +66,7 @@ def story():
                        "options": next_steps_results
                        })
 
+
 @route('/js/<filename:re:.*\.js$>', method='GET')
 def javascripts(filename):
     return static_file(filename, root='js')
@@ -68,8 +81,10 @@ def stylesheets(filename):
 def images(filename):
     return static_file(filename, root='images')
 
+
 def main():
     run(host='localhost', port=9000)
+
 
 if __name__ == '__main__':
     main()
