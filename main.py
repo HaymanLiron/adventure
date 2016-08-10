@@ -36,31 +36,43 @@ def start():
             print("user added!")
     except Exception as e:
         print("you failed")
-    return json.dumps({"user": username,
-                       "adventure": current_adv_id
+    return json.dumps({"question_num": "",
+                       "question_text": "",
+                       "answers": [],
+                       "image": "choice.jpg"
                        })
 
 
 @route("/story", method="POST")
 def story():
-    user_id = request.POST.get("user")
-    current_adv_id = request.POST.get("adventure")
-    next_story_id = request.POST.get("next") #this is what the user chose - use it!
-    next_steps_results = [
-        {"id": 1, "option_text": "I run!"},
-        {"id": 2, "option_text": "I hide!"},
-        {"id": 3, "option_text": "I sleep!"},
-        {"id": 4, "option_text": "I fight!"}
-        ]
-    random.shuffle(next_steps_results) #todo change - used only for demonstration purpouses
+    username = request.POST.get("username")
+    # get question_num, question_text, list_of_answers using SQL queries, and all we actually care about is the username
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT curr_question FROM users WHERE user_name = '{0}'".format(username)
+            cursor.execute(sql)
 
-    #todo add the next step based on db
-    return json.dumps({"user": user_id,
-                       "adventure": current_adv_id,
-                       "text": "New scenario! What would you do?",
-                       "image": "choice.jpg",
-                       "options": next_steps_results
-                       })
+            question_num = cursor.fetchone()['curr_question']
+
+            sql = "SELECT question_text FROM questions WHERE idquestions = '{0}'".format(question_num)
+            cursor.execute(sql)
+            question_text = cursor.fetchone()['question_text']
+
+            sql = "SELECT next_answer_id, answer_text FROM qa_link ql INNER JOIN answers " \
+                  "ON ql.next_answer_id = answers.idanswers " \
+                  "WHERE ql.prev_question_id = -1 and ql.prev_answer_id = -1"
+            cursor.execute(sql)
+            list_of_answers = cursor.fetchall()
+            print(list_of_answers)
+        # TODO: add customised images to each question
+        return json.dumps({"question_num": question_num,
+                           "question_text": question_text,
+                           "answers": list_of_answers,
+                           "image": "choice.jpg"
+                           })
+    except Exception as e:
+        return json.dumps({'error': 'something is wrong with the DB ' + repr(e)})
+
 
 
 @route('/js/<filename:re:.*\.js$>', method='GET')

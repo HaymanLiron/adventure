@@ -25,9 +25,12 @@ Adventures.bindErrorHandlers = function () {
     });
 };
 
+Adventures.startQuestions = function () {
+    
+};
 
 //The core function of the app, sends the user's choice and then parses the results to the server and handling the response
-Adventures.chooseOption = function(){
+Adventures.chooseAdventure = function(){
     Adventures.currentStep = $(this).val();
     $.ajax("/story",{
         type: "POST",
@@ -37,28 +40,27 @@ Adventures.chooseOption = function(){
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
-            console.log(data);
             $(".greeting-text").hide();
-            // Adventures.write(data);
         }
     });
 };
 
 Adventures.write = function (message) {
     //Writing new choices and image to screen
-    $(".situation-text").text(message["text"]).show();
-    for(var i=0;i<message['options'].length;i++){
-        var opt = $("#option_" + (i+1));
-        opt.text(message['options'][i]['option_text']);
-        opt.prop("value", message['options'][i]['id']);
+    $(".situation-text").text(message['question_text']).show();
+    console.log(message);
+    for(var i=0;i<message['answers'].length;i++){
+        var opt = $('#option_' + (i+1));
+        opt.text(message['answers'][i]['answer_text']);
+        opt.prop("value", message['answers'][i]['next_answer_id']);
     }
-    Adventures.setImage(message["image"]);
+    Adventures.setImage(message['image']);
 };
 
 
 Adventures.start = function(){
     $(document).ready(function () {
-        $(".game-option").click(Adventures.chooseOption);
+        $(".game-option").click(Adventures.chooseAdventure);
         $("#nameField").keyup(Adventures.checkName);
         $(".adventure-button").click(Adventures.initAdventure);
         $(".adventure").hide();
@@ -82,7 +84,6 @@ Adventures.checkName = function(){
 
 
 Adventures.initAdventure = function(){
-    console.log($("#nameField").val(), $("#passwordField").val(), $(this).val());
     $.ajax("/start",{
         type: "POST",
         data: {"username": $("#nameField").val(),
@@ -94,9 +95,9 @@ Adventures.initAdventure = function(){
         contentType: "application/json",
         success: function (data) {
             console.log(data);
-            // Adventures.write(data);
-            // $(".adventure").show();
-            // $(".welcome-screen").hide();
+            Adventures.write(data);
+            $(".adventure").show();
+            $(".welcome-screen").hide();
         }
     });
 };
@@ -107,7 +108,7 @@ Adventures.handleServerError = function (errorThrown) {
     if (Adventures.debugMode) {
         actualError = " ( " + errorThrown + " ) ";
     }
-    // Adventures.write("Sorry, there seems to be an error on the server. Let's talk later. " + actualError);
+    Adventures.write("Sorry, there seems to be an error on the server. Let's talk later. " + actualError);
 
 };
 
