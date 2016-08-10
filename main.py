@@ -20,26 +20,22 @@ def index():
 
 @route("/start", method="POST")
 def start():
-    username = request.POST.get("name")
+    username = request.POST.get("username")
     password = request.POST.get("password")
     gender = request.POST.get("gender")
     current_adv_id = request.POST.get("adventure_id")
-
+    print(username, password, gender, current_adv_id)
     # TODO: before adding user
 
     try:
         with connection.cursor() as cursor:
-
             sql = "INSERT INTO `adventure-final`.`users` (`idusers`, `user_name`, `password`, `curr_question`, `user_coins`, `user_life`, `gender`) " \
-                  "VALUES (NULL, username, password, '1', '100', '100', gender);"
-
+                  "VALUES (NULL, '{0}','{1}', '1', '100', '100','{2}');".format(username, password, gender)
             cursor.execute(sql)
             connection.commit()
             print("user added!")
     except Exception as e:
         print("you failed")
-
-
     return json.dumps({"user": username,
                        "adventure": current_adv_id
                        })

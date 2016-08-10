@@ -39,7 +39,7 @@ Adventures.chooseOption = function(){
         success: function (data) {
             console.log(data);
             $(".greeting-text").hide();
-            Adventures.write(data);
+            // Adventures.write(data);
         }
     });
 };
@@ -82,20 +82,21 @@ Adventures.checkName = function(){
 
 
 Adventures.initAdventure = function(){
-
+    console.log($("#nameField").val(), $("#passwordField").val(), $(this).val());
     $.ajax("/start",{
         type: "POST",
-        data: {"user":
-            $("#nameField").val(),
+        data: {"username": $("#nameField").val(),
+            "password": $("#passwordField").val(),
+            "gender": "M", //TODO: add to user interface later, as bonus feature
             "adventure_id": $(this).val()
         },
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
             console.log(data);
-            Adventures.write(data);
-            $(".adventure").show();
-            $(".welcome-screen").hide();
+            // Adventures.write(data);
+            // $(".adventure").show();
+            // $(".welcome-screen").hide();
         }
     });
 };
@@ -106,7 +107,7 @@ Adventures.handleServerError = function (errorThrown) {
     if (Adventures.debugMode) {
         actualError = " ( " + errorThrown + " ) ";
     }
-    Adventures.write("Sorry, there seems to be an error on the server. Let's talk later. " + actualError);
+    // Adventures.write("Sorry, there seems to be an error on the server. Let's talk later. " + actualError);
 
 };
 
