@@ -1,8 +1,7 @@
 from bottle import route, run, template, static_file, get, post, request
-import random
 import json
 import pymysql
-
+import os
 
 # Connect to the database
 connection = pymysql.connect(host='localhost',
@@ -46,6 +45,7 @@ def start():
 @route("/story", method="POST")
 def story():
     username = request.POST.get("username")
+    user_choice = request.POST.get("choice")  # returns None if has not been sent
     # get question_num, question_text, list_of_answers using SQL queries, and all we actually care about is the username
     try:
         with connection.cursor() as cursor:
@@ -75,6 +75,7 @@ def story():
 
 
 
+
 @route('/js/<filename:re:.*\.js$>', method='GET')
 def javascripts(filename):
     return static_file(filename, root='js')
@@ -91,7 +92,10 @@ def images(filename):
 
 
 def main():
-    run(host='localhost', port=9000)
+    if os.environ.get('APP_LOCATION') == 'heroku':
+        run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    else:
+        run(host='localhost', port=8080, debug=True)
 
 
 if __name__ == '__main__':

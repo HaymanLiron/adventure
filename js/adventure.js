@@ -3,7 +3,7 @@ var Adventures = {};
 Adventures.currentAdventure = 0; //todo keep track from db
 //currentStep is used for the step we're currently on (id). This should be determined at every crossroad, depending on what the user chose
 Adventures.currentStep = 0;//todo keep track from db
-Adventures.currentUser = 0;//todo keep track from db
+Adventures.currentUser = "";//todo keep track from db
 
 
 //TODO: remove for production
@@ -25,22 +25,30 @@ Adventures.bindErrorHandlers = function () {
     });
 };
 
-Adventures.startQuestions = function () {
-    
-};
-
-//The core function of the app, sends the user's choice and then parses the results to the server and handling the response
-Adventures.chooseAdventure = function(){
-    Adventures.currentStep = $(this).val();
+Adventures.getNextQuestion = function () {
     $.ajax("/story",{
         type: "POST",
-        data: {"user": Adventures.currentUser,
-            "adventure": Adventures.currentAdventure,
-            "next": Adventures.currentStep},
+        data: {"username": Adventures.currentUser}, 
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
             $(".greeting-text").hide();
+            Adventures.write(data);
+        }
+    });
+};
+
+//The core function of the app, sends the user's choice and then parses the results to the server and handling the response
+Adventures.chooseOption = function(){
+    $.ajax("/story",{
+        type: "POST",
+        data: {"username": Adventures.currentUser,
+            "choice": $(this).val()}, //TODO: FIX!
+        dataType: "json",
+        contentType: "application/json",
+        success: function (data) {
+            $(".greeting-text").hide();
+            Adventures.write(data);
         }
     });
 };
@@ -60,9 +68,9 @@ Adventures.write = function (message) {
 
 Adventures.start = function(){
     $(document).ready(function () {
-        $(".game-option").click(Adventures.chooseAdventure);
-        $("#nameField").keyup(Adventures.checkName);
-        $(".adventure-button").click(Adventures.initAdventure);
+        $(".game-option").click(Adventures.chooseOption); //this sets up the event listener for when a player will click an option which is in response to a question during the adventure
+        $("#nameField").keyup(Adventures.checkName); //this validates the player's input for his username when starting the game
+        $(".adventure-option").click(Adventures.initAdventure); //this sets up a click event listener for when a player selects an adventure at the beginning of the game
         $(".adventure").hide();
         $(".welcome-screen").show();
     });
@@ -75,29 +83,28 @@ Adventures.setImage = function (img_name) {
 
 Adventures.checkName = function(){
     if($(this).val() !== undefined && $(this).val() !== null && $(this).val() !== ""){
-        $(".adventure-button").prop("disabled", false);
+        $(".adventure-option").prop("disabled", false);
     }
     else{
-        $(".adventure-button").prop("disabled", true);
+        $(".adventure-option").prop("disabled", true);
     }
 };
 
-
 Adventures.initAdventure = function(){
+    Adventures.currentUser = $("#nameField").val();
     $.ajax("/start",{
         type: "POST",
         data: {"username": $("#nameField").val(),
             "password": $("#passwordField").val(),
-            "gender": "M", //TODO: add to user interface later, as bonus feature
+            "gender": "M", //TODO: add to UI later, as bonus feature
             "adventure_id": $(this).val()
         },
         dataType: "json",
         contentType: "application/json",
-        success: function (data) {
-            console.log(data);
-            Adventures.write(data);
+        success: function (data) { //we don't actually need the data at the moment
             $(".adventure").show();
             $(".welcome-screen").hide();
+            Adventures.getNextQuestion();
         }
     });
 };
