@@ -6,7 +6,7 @@ import os
 # Connect to the database
 
 
-connection = pymysql.connect(host='sql212.byethost9.com	',
+connection = pymysql.connect(host='sql212.byethost9.com',
                              user='b9_18681615',
                              password='zxcv1234',
                              db='b9_18681615_adventure',
