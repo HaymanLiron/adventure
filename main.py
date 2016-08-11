@@ -6,10 +6,18 @@ import os
 # Connect to the database
 
 
-connection = pymysql.connect(host='sql212.byethost9.com',
-                             user='b9_18681615',
-                             password='zxcv1234',
-                             db='b9_18681615_adventure',
+#
+# connection = pymysql.connect(host='sql212.byetcluster.com',
+#                              user='b9_18681615',
+#                              password='zxcv1234',
+#                              db='b9_18681615_adventure',
+#                              charset='utf8',
+#                              cursorclass=pymysql.cursors.DictCursor)
+
+connection = pymysql.connect(host='us-cdbr-iron-east-04.cleardb.net',
+                             user='bf0322fb12a331',
+                             password='97028153',
+                             db='heroku_19fdd981997ff6d',
                              charset='utf8',
                              cursorclass=pymysql.cursors.DictCursor)
 
