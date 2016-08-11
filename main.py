@@ -4,13 +4,21 @@ import pymysql
 import os
 
 # Connect to the database
-connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='',
-                             db='adventure-final',
-                             charset='utf8',
-                             cursorclass=pymysql.cursors.DictCursor)
 
+if os.environ.get('APP_LOCATION') == 'heroku':
+    connection = pymysql.connect(host='sql212.byethost9.com	',
+                                 user='b9_18681615',
+                                 password='zxcv1234',
+                                 db='b9_18681615_adventure',
+                                 charset='utf8',
+                                 cursorclass=pymysql.cursors.DictCursor)
+else:
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 password='',
+                                 db='adventure-final',
+                                 charset='utf8',
+                                 cursorclass=pymysql.cursors.DictCursor)
 
 @route("/", method="GET")
 def index():
