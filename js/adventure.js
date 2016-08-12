@@ -28,12 +28,14 @@ Adventures.bindErrorHandlers = function () {
 Adventures.getNextQuestion = function () {
     $.ajax("/story",{
         type: "POST",
-        data: {"username": Adventures.currentUser}, 
+        data: {"username": Adventures.currentUser},
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
             $(".greeting-text").hide();
-            Adventures.write(data);
+            if(data){
+                Adventures.write(data);
+            }
         }
     });
 };
@@ -43,12 +45,16 @@ Adventures.chooseOption = function(){
     $.ajax("/story",{
         type: "POST",
         data: {"username": Adventures.currentUser,
-            "choice": $(this).val()}, //TODO: FIX!
+            "choice": $(this).attr("value")},
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
             $(".greeting-text").hide();
-            Adventures.write(data);
+            if(data["is_content"]){
+                console.log(data);
+                Adventures.write(data);
+            }
+
         }
     });
 };
@@ -56,11 +62,10 @@ Adventures.chooseOption = function(){
 Adventures.write = function (message) {
     //Writing new choices and image to screen
     $(".situation-text").text(message['question_text']).show();
-    console.log(message);
     for(var i=0;i<message['answers'].length;i++){
         var opt = $('#option_' + (i+1));
         opt.text(message['answers'][i]['answer_text']);
-        opt.prop("value", message['answers'][i]['next_answer_id']);
+        opt.prop("value", message['answers'][i]['next_answer_id']); //TODO: maybe change to curr_answer_id if time
     }
     Adventures.setImage(message['image']);
 };
@@ -121,7 +126,7 @@ Adventures.handleServerError = function (errorThrown) {
 
 Adventures.debugPrint = function (msg) {
     if (Adventures.debugMode) {
-        console.log("Adventures DEBUG: " + msg)
+        console.log("Adventures DEBUG: " + msg);
     }
 };
 
