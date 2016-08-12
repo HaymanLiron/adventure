@@ -1,6 +1,7 @@
 
 body{
-    background-image:url('../images/forest.jpg');
+    background-image:url('../images/goosebumps-the-game.png');
+    background-size: cover;
     font-family: 'Roboto', sans-serif;
     overflow: hidden;
 }
