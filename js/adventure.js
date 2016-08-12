@@ -45,16 +45,19 @@ Adventures.chooseOption = function(){
     $.ajax("/story",{
         type: "POST",
         data: {"username": Adventures.currentUser,
-            "choice": $(this).attr("value")},
+            "choice": $(this).attr("value")}, //treat final step separately, also treat run away separately
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
             $(".greeting-text").hide();
             if(data["is_content"]){
-                console.log(data);
-                Adventures.write(data);
+                // check if player is dead
+                if (data["life"] <= 0){
+                    Adventures.deadScreen();
+                } else {
+                    Adventures.write(data);    
+                }
             }
-
         }
     });
 };
@@ -67,6 +70,7 @@ Adventures.write = function (message) {
         opt.text(message['answers'][i]['answer_text']);
         opt.prop("value", message['answers'][i]['next_answer_id']); //TODO: maybe change to curr_answer_id if time
     }
+    $(".coins-and-lives").text("You have " + message["coins"] + " coins and " + message["life"] + " percentage life!").show();
     Adventures.setImage(message['image']);
 };
 
@@ -77,6 +81,7 @@ Adventures.start = function(){
         $("#nameField").keyup(Adventures.checkName); //this validates the player's input for his username when starting the game
         $(".adventure-option").click(Adventures.initAdventure); //this sets up a click event listener for when a player selects an adventure at the beginning of the game
         $(".adventure").hide();
+        $(".dead-screen").hide();
         $(".welcome-screen").show();
     });
 };
@@ -93,6 +98,12 @@ Adventures.checkName = function(){
     else{
         $(".adventure-option").prop("disabled", true);
     }
+};
+
+Adventures.deadScreen = function () {
+    $(".adventure").hide();
+    $(".welcome-screen").hide(); //defensive in case user had logged in after dying
+    $(".dead-screen").show();
 };
 
 Adventures.initAdventure = function(){
