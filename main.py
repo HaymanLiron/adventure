@@ -182,11 +182,50 @@ def update_user_coins_and_life_based_on_answer(user, answer_id):
     return None
 
 
+@route("/checkUsernameExists", method="POST")
+def check_username_exists():
+    username_provided = request.POST.get("username")
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM users " \
+                  "WHERE user_name = '{0}'".format(username_provided)
+            cursor.execute(sql)
+            result = cursor.fetchone()  # returns None if there was no match!
+            if result:
+                return json.dumps({"is_match": 1})
+            else:
+                return json.dumps({"is_match": 0})
+    except Exception as e:
+        print("you failed because of " + repr(e))
+    return None
+
+
+@route("/checkUserCredentials", method="POST")
+def check_user_credentials():
+    username_provided = request.POST.get("username")
+    password_provided = request.POST.get("password")
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM users " \
+                  "WHERE user_name = '{0}' AND password = '{1}'".format(username_provided, password_provided)
+            cursor.execute(sql)
+            result = cursor.fetchone()  # returns None if there was no match!
+            if result:
+                return json.dumps({"is_match": 1})
+            else:
+                return json.dumps({"is_match": 0})
+    except Exception as e:
+        print("you failed because of " + repr(e))
+    return None
+
+
 @route("/story", method="POST")
 def story():
     username = request.POST.get("username")  # TODO: use cookies instead of sending username every time
     user_choice = request.POST.get("choice")  # returns an empty string if has not been sent
+
     user = get_user_by_name(username)
+
     # get the next question id from user in order to get the next question
     if user_choice and user["curr_question"]:
         update_user_coins_and_life_based_on_answer(get_user_by_name(username), user_choice)
@@ -196,12 +235,18 @@ def story():
     # need to get this another time to get updated values of current question and previous answer!
     user = get_user_by_name(username)
     # only get next question for user if it exists
+    print(user)
     if user["curr_question"]:
         question_text, list_of_answers = get_question_for_user(user)
         return json.dumps({"question_text": question_text["question_text"],
                            "answers": list_of_answers,
                            "image": "choice.jpg",
                            "is_content": 1,
+                           "coins": user["user_coins"],
+                           "life": user["user_life"]
+                           })
+    elif user["user_life"] <= 0:
+        return json.dumps({"is_content": 1,
                            "coins": user["user_coins"],
                            "life": user["user_life"]
                            })

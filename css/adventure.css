@@ -44,6 +44,9 @@ text-align:center;
     display: block;
 }
 
+.user-input-feedback {
+    color: red;
+}
 
 .option-select{
 	padding:5px 300px;
