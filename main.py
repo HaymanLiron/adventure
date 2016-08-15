@@ -32,13 +32,15 @@ def start():
     username = request.POST.get("username")
     password = request.POST.get("password")
     gender = request.POST.get("gender")
-    current_adv_id = request.POST.get("adventure_id")
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO `adventure-final`.`users` (`idusers`, `user_name`, `password`, `curr_question`, `user_coins`, `user_life`, `gender`, `prev_answer_id`) " \
                   "VALUES (NULL, '{0}','{1}', '1', '100', '100','{2}', '-1');".format(username, password, gender)
+            print("hi1")
             cursor.execute(sql)
+            print("hi2")
             connection.commit()
+            print("hi3")
     except Exception as e:
         print("you failed because of " + repr(e))
     return json.dumps({"question_num": "",

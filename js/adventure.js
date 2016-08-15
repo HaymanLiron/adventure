@@ -4,7 +4,6 @@ Adventures.currentAdventure = ""; //todo keep track from db
 
 Adventures.currentUser = "";//todo keep track from db
 
-
 //TODO: remove for production
 Adventures.debugMode = true;
 Adventures.DEFAULT_IMG = "./images/choice.jpg";
@@ -131,7 +130,6 @@ Adventures.validateNewUserInfo = function () {
             if (data["is_match"]) {
                 //user name already exists
                 $(".user-input-feedback").text("This username already exists, please try again!");
-                return;
             } else {
                 //user name does not exist
                 Adventures.currentUser = $("#newNameField").val();
@@ -181,7 +179,6 @@ Adventures.startAdventureWithNewUser = function () {
             "username": $("#newNameField").val(),
             "password": $("#newPasswordField1").val(),
             "gender": "M", //TODO: add to UI later, as bonus feature
-            "adventure_id": $(this).val()
         },
         dataType: "json",
         contentType: "application/json",
@@ -192,7 +189,7 @@ Adventures.startAdventureWithNewUser = function () {
             Adventures.getNextQuestion();
         }
     });
-}
+};
 
 Adventures.initAdventure = function () {
     //username gave their info in the existing user section
