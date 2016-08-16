@@ -6,7 +6,7 @@ import os
 # Connect to the database
 
 
-#
+# #
 connection = pymysql.connect(host='us-cdbr-iron-east-04.cleardb.net',
                              user='bf0322fb12a331',
                              password='97028153',
@@ -276,7 +276,7 @@ def main():
     # if os.environ.get('APP_LOCATION') == 'heroku':
     run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
     # else:
-    #run(host='localhost', port=8080, debug=True)
+    # run(host='localhost', port=8080, debug=True)
 
 
 if __name__ == '__main__':
