@@ -7,19 +7,19 @@ import os
 
 
 #
-# connection = pymysql.connect(host='sql212.byetcluster.com',
-#                              user='b9_18681615',
-#                              password='zxcv1234',
-#                              db='b9_18681615_adventure',
-#                              charset='utf8',
-#                              cursorclass=pymysql.cursors.DictCursor)
-
-connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='',
-                             db='adventure-final',
+connection = pymysql.connect(host='us-cdbr-iron-east-04.cleardb.net',
+                             user='bf0322fb12a331',
+                             password='97028153',
+                             db='heroku_19fdd981997ff6d',
                              charset='utf8',
                              cursorclass=pymysql.cursors.DictCursor)
+
+# connection = pymysql.connect(host='localhost',
+#                              user='root',
+#                              password='',
+#                              db='adventure-final',
+#                              charset='utf8',
+#                              cursorclass=pymysql.cursors.DictCursor)
 
 
 @route("/", method="GET")
@@ -274,9 +274,9 @@ def images(filename):
 
 def main():
     # if os.environ.get('APP_LOCATION') == 'heroku':
-    #     run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
     # else:
-    run(host='localhost', port=8080, debug=True)
+    #run(host='localhost', port=8080, debug=True)
 
 
 if __name__ == '__main__':
