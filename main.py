@@ -6,7 +6,7 @@ import os
 # Connect to the database
 
 
-# #
+#
 connection = pymysql.connect(host='us-cdbr-iron-east-04.cleardb.net',
                              user='bf0322fb12a331',
                              password='97028153',
