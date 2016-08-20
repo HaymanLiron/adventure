@@ -26,31 +26,16 @@
 
 				</div>
 			</div>
-			<!-- existing users-->
-			<h2 class="name-text">Returning Users</h2>
 			<div class="form-group">
 				<div class="col-sm-12">
 					<input type="text" class="form-control" id="nameField" value="" placeholder="Name (Required)">
-					<input type="password" class="form-control" id="passwordField" value="" placeholder="Password">
 				</div>
 			</div>
-			<h2 class="name-text">New Users</h2>
-			<div class="form-group">
-				<div class="col-sm-12">
-					<input type="text" class="form-control" id="newNameField" value="" placeholder="Name (Required)">
-					<input type="password" class="form-control" id="newPasswordField1" value="" placeholder="Password">
-					<input type="password" class="form-control" id="newPasswordField2" value="" placeholder="Repeat Password">
-				</div>
-			</div>
-			<div class="user-input-feedback"></div>
 
 			<!-- Options list -->
 			<div class="options-list">
 				<h2 class="name-text">What game would you like to play?</h2>
 				<button type="button" class="btn btn-default btn-lg btn-block adventure-option" id="adv_1" value="1" disabled="true">Goosebumps</button>
-
-				<!--todo GeekOut: consider making this generic, if you have time-->
-
 			</div>
 		</div>
 		<div class="adventure">
@@ -78,8 +63,8 @@
 				<button type="button" class="btn btn-primary btn-lg btn-block game-option" id="option_4" value=""></button>
 			</div>
 		</div>
-		<div class="dead-screen">
-			You died :(
+		<div class="final-screen">
+			<div class="final-message"></div>
 		</div>
 	</div>
 

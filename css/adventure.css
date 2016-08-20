@@ -56,15 +56,15 @@ text-align:center;
 	vertical-align: bottom;
 }
 
-
+.situation-image {
+    height: 300px;
+    width: auto;
+}
 
 .situation-text-holder{
 	text-align: center;
 	display: block;
 }
-
-
-
 
 .copyright{
     position: fixed;
