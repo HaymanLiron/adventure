@@ -36,11 +36,8 @@ def start():
         with connection.cursor() as cursor:
             sql = "INSERT INTO `adventure-final`.`users` (`idusers`, `user_name`, `password`, `curr_question`, `user_coins`, `user_life`, `gender`, `prev_answer_id`) " \
                   "VALUES (NULL, '{0}','{1}', '1', '100', '100','{2}', '-1');".format(username, password, gender)
-            print("hi1")
             cursor.execute(sql)
-            print("hi2")
             connection.commit()
-            print("hi3")
     except Exception as e:
         print("you failed because of " + repr(e))
     return json.dumps({"question_num": "",
@@ -274,9 +271,9 @@ def images(filename):
 
 def main():
     # if os.environ.get('APP_LOCATION') == 'heroku':
-    run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    # run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
     # else:
-    # run(host='localhost', port=8080, debug=True)
+    run(host='localhost', port=8080, debug=True)
 
 
 if __name__ == '__main__':
